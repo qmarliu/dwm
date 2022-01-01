@@ -87,6 +87,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_r,      spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_n,      spawn,          {.v = termcmd2 } },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          {.v = flameshotcmd } },
 	{ MODKEY,                       XK_g,      spawn,          {.v = googlecmd } },
