@@ -31,6 +31,20 @@ static const unsigned int alphas[][3]      = {
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
 };
 
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
+const char *spcmd2[] = {"st", "-n", "spfm", "-g", "144x41", "-e", "ranger", NULL };
+const char *spcmd3[] = {"keepassxc", NULL };
+static Sp scratchpads[] = {
+	/* name          cmd  */
+	{"spterm",      spcmd1},
+	{"spranger",    spcmd2},
+	{"keepassxc",   spcmd3},
+};
+
 /* tagging */
 static const char *tags[] = { "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
 
@@ -40,8 +54,11 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Gimp",     NULL,         NULL,       0,              1,           -1 },
+	{ "Firefox",  NULL,         NULL,       1 << 8,         0,           -1 },
+	{ NULL,       "spterm",     NULL,       SPTAG(0),       1,           -1 },
+	{ NULL,       "spfm",       NULL,       SPTAG(1),       1,           -1 },
+	{ NULL,       "keepassxc",  NULL,       SPTAG(2),       0,           -1 },
 };
 
 /* layout(s) */
@@ -91,8 +108,6 @@ static const char *termcmd[]  = { "alacritty", NULL };
 // static const char *termcmd[]  = { "st", NULL };
 static const char *roficmd[] = { "rofi", "-show", "drun", "-show-icons", NULL };
 static const char *termcmd2[]  = { "xfce4-terminal", NULL };
-static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "150x40", NULL };
 
 static const char *flameshotcmd[]  = { "/usr/bin/flameshot", "gui", NULL };
 static const char *googlecmd[]  = { "google-chrome-stable", NULL };
@@ -101,6 +116,7 @@ static const char *trayercmd[]  = { "trayer", NULL };
 static const char *changebgcmd[]  = { "/home/liul/scripts/wp-change.sh", NULL };
 static const char *amixerupcmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%+", NULL };
 static const char *amixerdowncmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%-", NULL };
+
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -116,6 +132,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_v,      spawn,          {.v = amixerupcmd } },
 	{ MODKEY|ShiftMask,             XK_v,      spawn,          {.v = amixerdowncmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_grave,  focusstackvis,  {.i = +1 } },
 	{ MODKEY,                       XK_j,      focusstackvis,  {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstackvis,  {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_j,      focusstackhid,  {.i = +1 } },
@@ -159,6 +176,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_y,      togglescratch,  {.ui = 0 } },
+	{ MODKEY,                       XK_u,      togglescratch,  {.ui = 1 } },
+	{ MODKEY,                       XK_z,      togglescratch,  {.ui = 2 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -182,7 +202,7 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button1,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
