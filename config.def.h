@@ -116,7 +116,6 @@ static const char *trayercmd[]  = { "trayer", NULL };
 static const char *changebgcmd[]  = { "/home/liul/scripts/wp-change.sh", NULL };
 // static const char *amixerupcmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%+", NULL };
 // static const char *amixerdowncmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%-", NULL };
-// actl set-sink-volume 3 -15%
 static const char *amixerupcmd[]  = { "pactl", "set-sink-volume", "0", "+5%", NULL };
 static const char *amixerdowncmd[]  = { "pactl", "set-sink-volume", "0", "-5%", NULL };
 
