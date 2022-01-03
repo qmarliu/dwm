@@ -10,8 +10,8 @@ static const unsigned int gappov    = 30;       /* vert outer gap between window
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "WenQuanYi Zen Hei Mono:size=12" };
-static const char dmenufont[]       = "WenQuanYi Zen Hei Mono:size=12";
+static const char *fonts[]          = { "WenQuanYi Zen Hei Mono:size=10" };
+static const char dmenufont[]       = "WenQuanYi Zen Hei Mono:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -35,8 +35,8 @@ typedef struct {
 	const char *name;
 	const void *cmd;
 } Sp;
-const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
-const char *spcmd2[] = {"st", "-n", "spfm", "-g", "144x41", "-e", "ranger", NULL };
+const char *spcmd1[] = {"st", "-n", "spterm", "-g", "130x34", NULL };
+const char *spcmd2[] = {"st", "-n", "spfm", "-g", "146x25", "-e", "ranger", NULL };
 const char *spcmd3[] = {"keepassxc", NULL };
 static Sp scratchpads[] = {
 	/* name          cmd  */
@@ -116,7 +116,6 @@ static const char *trayercmd[]  = { "trayer", NULL };
 static const char *changebgcmd[]  = { "/home/liul/scripts/wp-change.sh", NULL };
 // static const char *amixerupcmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%+", NULL };
 // static const char *amixerdowncmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%-", NULL };
-// actl set-sink-volume 3 -15%
 static const char *amixerupcmd[]  = { "pactl", "set-sink-volume", "0", "+5%", NULL };
 static const char *amixerdowncmd[]  = { "pactl", "set-sink-volume", "0", "-5%", NULL };
 
@@ -125,6 +124,7 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_r,      spawn,          {.v = roficmd } },
+	{ MODKEY,                       XK_space,  spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_n,      spawn,          {.v = termcmd2 } },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          {.v = flameshotcmd } },
@@ -171,7 +171,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_f,      fullscreen,     {0} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
