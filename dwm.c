@@ -1859,7 +1859,7 @@ showone(const Arg *arg)
     Client *c = NULL, *i;
     c = selmon->sel;
     for (i = selmon->clients; i; i = i->next) {
-        if (i != c ) {
+        if (i != c && HIDDEN(i)) {
             showwin(i);
             break;
         }
