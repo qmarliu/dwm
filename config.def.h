@@ -114,10 +114,10 @@ static const char *googlecmd[]  = { "google-chrome-stable", NULL };
 static const char *explorecmd[]  = { "thunar", NULL };
 static const char *trayercmd[]  = { "trayer", NULL };
 static const char *changebgcmd[]  = { "/home/liul/scripts/wp-change.sh", NULL };
-// static const char *amixerupcmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%+", NULL };
-// static const char *amixerdowncmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%-", NULL };
-static const char *amixerupcmd[]  = { "pactl", "set-sink-volume", "0", "+5%", NULL };
-static const char *amixerdowncmd[]  = { "pactl", "set-sink-volume", "0", "-5%", NULL };
+static const char *amixerupcmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%+", NULL };
+static const char *amixerdowncmd[]  = { "amixer", "-D", "pulse", "sset", "Master", "5%-", NULL };
+// static const char *amixerupcmd[]  = { "pactl", "set-sink-volume", "0", "+5%", NULL };
+// static const char *amixerdowncmd[]  = { "pactl", "set-sink-volume", "0", "-5%", NULL };
 
 
 static Key keys[] = {
@@ -127,7 +127,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_space,  spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_n,      spawn,          {.v = termcmd2 } },
-	{ MODKEY|ShiftMask,             XK_a,      spawn,          {.v = flameshotcmd } },
+	{ MODKEY,                       XK_a,      spawn,          {.v = flameshotcmd } },
 	{ MODKEY,                       XK_g,      spawn,          {.v = googlecmd } },
 	{ MODKEY,                       XK_e,      spawn,          {.v = explorecmd } },
 	{ MODKEY|ShiftMask,             XK_t,      spawn,          {.v = trayercmd } },
@@ -180,7 +180,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_y,      togglescratch,  {.ui = 0 } },
 	{ MODKEY,                       XK_u,      togglescratch,  {.ui = 1 } },
-	{ MODKEY,                       XK_z,      togglescratch,  {.ui = 2 } },
+	// { MODKEY,                       XK_z,      togglescratch,  {.ui = 2 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
