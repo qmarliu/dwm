@@ -72,7 +72,7 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
+	{ "|M|",      centeredmaster },    /* first entry is default */
 	{ "[M]",      monocle },
 	{ "[@]",      spiral },
 	{ "[\\]",     dwindle },
@@ -83,7 +83,7 @@ static const Layout layouts[] = {
 	{ "###",      nrowgrid },
 	{ "---",      horizgrid },
 	{ ":::",      gaplessgrid },
-	{ "|M|",      centeredmaster },
+	{ "[]=",      tile },
 	{ ">M>",      centeredfloatingmaster },
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ NULL,       NULL },
@@ -123,11 +123,10 @@ static const char *amixerdowncmd[]  = { "amixer", "-D", "pulse", "sset", "Master
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_r,      spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_space,  spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_n,      spawn,          {.v = termcmd2 } },
-	{ MODKEY,                       XK_a,      spawn,          {.v = flameshotcmd } },
+	{ MODKEY|ShiftMask,             XK_a,      spawn,          {.v = flameshotcmd } },
 	{ MODKEY,                       XK_g,      spawn,          {.v = googlecmd } },
 	{ MODKEY,                       XK_e,      spawn,          {.v = explorecmd } },
 	{ MODKEY|ShiftMask,             XK_t,      spawn,          {.v = trayercmd } },
@@ -167,9 +166,13 @@ static Key keys[] = {
 	{ MODKEY|Mod1Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_w,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[11]} }, //tile
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} }, //monocle
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]} }, //centeredmaster
+	{ MODKEY,                       XK_a,      setlayout,      {.v = &layouts[5]} }, //bstack
+	{ MODKEY,                       XK_c,      setlayout,      {.v = &layouts[12]} }, //centerfloatingmaster
+	{ MODKEY,                       XK_z,      setlayout,      {.v = &layouts[13]} }, //float
+	{ MODKEY,                       XK_r,      setlayout,      {.v = &layouts[3]} }, //dwindle
 	{ MODKEY|ShiftMask,             XK_f,      fullscreen,     {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -180,7 +183,6 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_y,      togglescratch,  {.ui = 0 } },
 	{ MODKEY,                       XK_u,      togglescratch,  {.ui = 1 } },
-	// { MODKEY,                       XK_z,      togglescratch,  {.ui = 2 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
