@@ -72,7 +72,7 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "|M|",      centeredmaster },    /* first entry is default */
+	{ "[]=",      tile },
 	{ "[M]",      monocle },
 	{ "[@]",      spiral },
 	{ "[\\]",     dwindle },
@@ -83,7 +83,7 @@ static const Layout layouts[] = {
 	{ "###",      nrowgrid },
 	{ "---",      horizgrid },
 	{ ":::",      gaplessgrid },
-	{ "[]=",      tile },
+	{ "|M|",      centeredmaster },    /* first entry is default */
 	{ ">M>",      centeredfloatingmaster },
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ NULL,       NULL },
@@ -166,9 +166,9 @@ static Key keys[] = {
 	{ MODKEY|Mod1Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_w,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[11]} }, //tile
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} }, //tile
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} }, //monocle
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]} }, //centeredmaster
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[11]} }, //centeredmaster
 	{ MODKEY,                       XK_a,      setlayout,      {.v = &layouts[5]} }, //bstack
 	{ MODKEY,                       XK_c,      setlayout,      {.v = &layouts[12]} }, //centerfloatingmaster
 	{ MODKEY,                       XK_z,      setlayout,      {.v = &layouts[13]} }, //float
