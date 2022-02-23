@@ -110,7 +110,7 @@ static const char *roficmd[] = { "rofi", "-show", "drun", "-show-icons", NULL };
 static const char *termcmd2[]  = { "xfce4-terminal", NULL };
 
 static const char *flameshotcmd[]  = { "/usr/bin/flameshot", "gui", NULL };
-static const char *googlecmd[]  = { "google-chrome-stable", NULL };
+static const char *googlecmd[]  = { "google-chrome-stable", "--proxy-server=socks5://localhost:1081", NULL };
 static const char *explorecmd[]  = { "thunar", NULL };
 static const char *trayercmd[]  = { "trayer", NULL };
 static const char *changebgcmd[]  = { "/home/liul/scripts/wp-change.sh", NULL };
