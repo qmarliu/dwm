@@ -90,8 +90,8 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask //Alt
-#define Windows Mod4Mask //windows
+#define MODKEY Mod4Mask //Alt
+#define Windows Mod1Mask //windows
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -108,6 +108,7 @@ static const char *termcmd[]  = { "alacritty", NULL };
 // static const char *termcmd[]  = { "st", NULL };
 static const char *roficmd[] = { "rofi", "-show", "drun", "-show-icons", NULL };
 static const char *termcmd2[]  = { "xfce4-terminal", NULL };
+static const char *keepass[]  = { "keepass", NULL };
 
 static const char *flameshotcmd[]  = { "/usr/bin/flameshot", "gui", NULL };
 static const char *googlecmd[]  = { "google-chrome-stable", "--proxy-server=socks5://localhost:1081", NULL };
@@ -123,6 +124,7 @@ static const char *amixerdowncmd[]  = { "amixer", "-D", "pulse", "sset", "Master
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = keepass } },
 	{ MODKEY,                       XK_space,  spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_n,      spawn,          {.v = termcmd2 } },
