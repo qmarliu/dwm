@@ -70,7 +70,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "alacritty", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
@@ -94,7 +94,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
+	{ MODKEY,                       XK_a,      setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
@@ -116,6 +116,17 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+
+	{ MODKEY,                       XK_e,      spawn,          SHCMD("~/scripts/app-starter.sh filemanager") },
+	{ MODKEY,                       XK_space,  spawn,          SHCMD("~/scripts/app-starter.sh rofi_drun") },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("~/scripts/app-starter.sh keepass") },
+	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("~/scripts/app-starter.sh xlock") },
+	{ MODKEY,                       XK_c,      spawn,          SHCMD("~/scripts/app-starter.sh chrome") },
+	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh flameshot") },
+	{ MODKEY|ControlMask|ShiftMask, XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh open_last_screenshot") },
+	{ MODKEY,                       XK_v,      spawn,          SHCMD("~/scripts/app-starter.sh set_vol up &") },
+	{ MODKEY|ShiftMask,             XK_v,      spawn,          SHCMD("~/scripts/app-starter.sh set_vol down &") },
+	{ MODKEY,                       XK_x,      spawn,          SHCMD("~/scripts/app-starter.sh change_wallpaper") },
 };
 
 /* button definitions */
