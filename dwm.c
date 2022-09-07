@@ -189,6 +189,7 @@ static long getstate(Window w);
 static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void grabbuttons(Client *c, int focused);
 static void grabkeys(void);
+static void hideother(const Arg *arg);
 static void hide(const Arg *arg);
 static void hidewin(Client *c);
 static void incnmaster(const Arg *arg);
@@ -231,6 +232,7 @@ static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
+static void showother(const Arg *arg);
 static void show(const Arg *arg);
 static void showwin(Client *c);
 static void showhide(Client *c);
@@ -1118,6 +1120,22 @@ grabkeys(void)
 }
 
 void
+hideother(const Arg *arg)
+{
+    if (!selmon->sel)
+        return;
+    Client *c = NULL, *i;
+    c = selmon->sel;
+    for (i = selmon->clients; i; i = i->next) {
+        if (i != c && ISVISIBLE(i)) {
+            hidewin(i);
+        }
+    }
+    focus(NULL);
+    arrange(selmon);
+}
+
+void
 hide(const Arg *arg)
 {
 	hidewin(selmon->sel);
@@ -1921,11 +1939,33 @@ seturgent(Client *c, int urg)
 }
 
 void
-show(const Arg *arg)
+showother(const Arg *arg)
 {
 	if (selmon->hidsel)
 		selmon->hidsel = 0;
-	showwin(selmon->sel);
+    Client *c = NULL, *i;
+    c = selmon->sel;
+    for (i = selmon->clients; i; i = i->next) {
+        if (i != c ) {
+            showwin(i);
+        }
+    }
+}
+
+void
+show(const Arg *arg)
+{
+  if (selmon->hidsel)
+    selmon->hidsel = 0;
+
+  Client *c = NULL, *i;
+  c = selmon->sel;
+  for (i = selmon->clients; i; i = i->next) {
+      if (i != c && HIDDEN(i)) {
+          showwin(i);
+          break;
+      }
+  }
 }
 
 void
