@@ -12,7 +12,7 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "WenQuanYi Zen Hei Mono:size=10" };
 static const char dmenufont[]       = "WenQuanYi Zen Hei Mono:size=10";
-static const char col_gray1[]       = "#222222";
+static const char col_gray1[]       = "#333333";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
@@ -22,13 +22,16 @@ static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
-	[SchemeHid]  = { col_cyan,  col_gray1, col_cyan  },
+	[SchemeSel]  = { col_gray4, "#665544",  "#bb7700"  },
+	[SchemeHid]  = { col_cyan,  col_gray1, col_gray2  },
+	[SchemeText] = { col_gray3, col_gray1, col_gray2  },
 };
 static const unsigned int alphas[][3]      = {
 	/*               fg      bg        border     */
 	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
+	[SchemeHid]  = { OPAQUE, baralpha, borderalpha },
+	[SchemeText]  = { OPAQUE, baralpha, borderalpha },
 };
 
 /* tagging */
@@ -153,4 +156,3 @@ static const Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
