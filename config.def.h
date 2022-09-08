@@ -32,7 +32,7 @@ static const unsigned int alphas[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
+static const char *tags[] = { "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖","", "ﱘ", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -59,8 +59,8 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod4Mask
-#define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+#define TAGKEYS(KEY,TAG,CMD) \
+	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG, .v = CMD} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
@@ -84,8 +84,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_k,      focusstackvis,  {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_j,      focusstackhid,  {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_k,      focusstackhid,  {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_r,      incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_u,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
@@ -106,27 +106,34 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_o,      showother,      {0} },
 	{ MODKEY,                       XK_s,      hide,           {0} },
 	{ MODKEY|ShiftMask,             XK_s,      show,           {0} },
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
+	TAGKEYS(XK_1,      0,           0)
+	TAGKEYS(XK_2,      1,           0)
+	TAGKEYS(XK_3,      2,           0)
+	TAGKEYS(XK_4,      3,           0)
+	TAGKEYS(XK_5,      4,           0)
+	TAGKEYS(XK_6,      5,           0)
+	TAGKEYS(XK_7,      6,           0)
+	TAGKEYS(XK_8,      7,           0)
+	TAGKEYS(XK_9,      8,           0)
+	TAGKEYS(XK_c,      9,           "~/scripts/app-starter.sh chrome")
+	TAGKEYS(XK_y,      10,          "~/scripts/app-starter.sh music")
+	TAGKEYS(XK_d,      11,          "~/scripts/app-starter.sh dingtalk")
+	TAGKEYS(XK_x,      12,          "~/scripts/app-starter.sh wechat")
+	TAGKEYS(XK_q,      13,          "~/scripts/app-starter.sh qq")
+	TAGKEYS(XK_i,      14,          "~/scripts/app-starter.sh dbeaver")
+	TAGKEYS(XK_z,      15,          "~/scripts/app-starter.sh keepassxc")
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("~/scripts/app-starter.sh filemanager") },
 	{ MODKEY,                       XK_space,  spawn,          SHCMD("~/scripts/app-starter.sh rofi_drun") },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("~/scripts/app-starter.sh keepass") },
 	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("~/scripts/app-starter.sh xlock") },
-	{ MODKEY,                       XK_c,      spawn,          SHCMD("~/scripts/app-starter.sh chrome") },
+	{ MODKEY,                       XK_g,      spawn,          SHCMD("~/scripts/app-starter.sh chrome") },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh flameshot") },
 	{ MODKEY|ControlMask|ShiftMask, XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh open_last_screenshot") },
 	{ MODKEY,                       XK_v,      spawn,          SHCMD("~/scripts/app-starter.sh set_vol up &") },
 	{ MODKEY|ShiftMask,             XK_v,      spawn,          SHCMD("~/scripts/app-starter.sh set_vol down &") },
-	{ MODKEY,                       XK_x,      spawn,          SHCMD("~/scripts/app-starter.sh change_wallpaper") },
+	{ MODKEY,                       XK_n,      spawn,          SHCMD("~/scripts/app-starter.sh change_wallpaper") },
 };
 
 /* button definitions */
