@@ -127,6 +127,7 @@ static const Key keys[] = {
 	TAGKEYS(XK_z,      15,          "~/scripts/app-starter.sh keepassxc")
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 
+	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("~/scripts/app-starter.sh killw") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("~/scripts/app-starter.sh filemanager") },
 	{ MODKEY,                       XK_space,  spawn,          SHCMD("~/scripts/app-starter.sh rofi_drun") },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("~/scripts/app-starter.sh keepass") },
