@@ -10,6 +10,8 @@ static const unsigned int gappov    = 20;       /* vert outer gap between window
 static const int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const int overviewgappi      = 24;        /* overview时 窗口与边缘 缝隙大小 */
+static const int overviewgappo      = 60;        /* overview时 窗口与窗口 缝隙大小 */
 static const char *fonts[]          = { "WenQuanYi Zen Hei Mono:size=10" };
 static const char dmenufont[]       = "WenQuanYi Zen Hei Mono:size=10";
 static const char col_gray1[]       = "#333333";
@@ -25,6 +27,7 @@ static const char *colors[][3]      = {
 	[SchemeSel]  = { col_gray4, "#665544",  "#bb7700"  },
 	[SchemeHid]  = { col_cyan,  col_gray1, col_gray2  },
 	[SchemeText] = { col_gray3, col_gray1, col_gray2  },
+	[SchemeUnderline] = { "#7799AA", "#7799AA", "#7799AA" },
 };
 static const unsigned int alphas[][3]      = {
 	/*               fg      bg        border     */
@@ -53,6 +56,8 @@ static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
+static const char *overviewtag = "OVERVIEW";
+static const Layout overviewlayout = { "",  overview };
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -97,6 +102,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
+	{ MODKEY|ShiftMask,             XK_Tab,    toggleoverview, {0} },
 	{ MODKEY,                       XK_w,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
@@ -162,6 +168,7 @@ static const Button buttons[] = {
 	{ ClkWinTitle,          0,              Button1,        togglewin,      {0} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkClientWin,         ControlMask,    Button1,        toggleoverview, {0} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },

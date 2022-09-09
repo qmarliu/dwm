@@ -49,7 +49,7 @@
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
 #define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
                                * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
-#define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
+#define ISVISIBLE(C)            ((C->mon->isoverview || C->tags & C->mon->tagset[C->mon->seltags]))
 #define HIDDEN(C)               ((getstate(C->win) == IconicState))
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
@@ -62,7 +62,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel, SchemeHid, SchemeText }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeHid, SchemeText, SchemeUnderline }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
@@ -239,12 +239,14 @@ static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void magicgrid(Monitor *m);
+static void overview(Monitor *m);
 static void grid(Monitor *m, uint gappo, uint gappi);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglescratch(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
+static void toggleoverview(const Arg *arg);
 static void togglewin(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
 static void unmanage(Client *c, int destroyed);
@@ -447,6 +449,10 @@ arrange(Monitor *m)
 void
 arrangemon(Monitor *m)
 {
+	if (m->isoverview) {
+		strncpy(m->ltsymbol, overviewlayout.symbol, sizeof m->ltsymbol);
+		overviewlayout.arrange(m); return;
+	}
 	strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
 	if (m->lt[m->sellt]->arrange)
 		m->lt[m->sellt]->arrange(m);
@@ -485,14 +491,21 @@ buttonpress(XEvent *e)
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
 		unsigned int occ = 0;
-		for(c = m->clients; c; c=c->next)
-			occ |= c->tags;
-		do {
-			/* Do not reserve space for vacant tags */
-			if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
-				continue;
-			x += TEXTW(tags[i]);
-		} while (ev->x >= x && ++i < LENGTH(tags));
+    if (selmon->isoverview) {
+      x += TEXTW(overviewtag);
+      i = ~0;
+      if (ev->x > x)
+        i = LENGTH(tags);
+    } else {
+      for(c = m->clients; c; c=c->next)
+        occ |= c->tags;
+      do {
+        /* Do not reserve space for vacant tags */
+        if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
+          continue;
+        x += TEXTW(tags[i]);
+      } while (ev->x >= x && ++i < LENGTH(tags));
+    }
 		if (i < LENGTH(tags)) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
@@ -723,6 +736,7 @@ createmon(void)
 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
 	m->pertag = ecalloc(1, sizeof(Pertag));
 	m->pertag->curtag = m->pertag->prevtag = 1;
+  m->isoverview = 0;
 
 	for (i = 0; i <= LENGTH(tags); i++) {
 		m->pertag->nmasters[i] = m->nmaster;
@@ -811,15 +825,27 @@ drawbar(Monitor *m)
 			urg |= c->tags;
 	}
 	x = 0;
-	for (i = 0; i < LENGTH(tags); i++) {
-		/* Do not draw vacant tags */
-		if(!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
-			continue;
-		w = TEXTW(tags[i]);
-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
-		x += w;
-	}
+
+  // 代表为overview tag状态
+  if (m->isoverview) {
+    int boxw = 2;
+    w = TEXTW(overviewtag);
+    drw_setscheme(drw, scheme[SchemeSel]);
+    drw_text(drw, x, 0, w, bh, lrpad / 2, overviewtag, 0);
+    drw_setscheme(drw, scheme[SchemeUnderline]);
+    drw_rect(drw, x, bh - boxw, w + lrpad, boxw, 1, 0);
+    x += w;
+  } else {
+    for (i = 0; i < LENGTH(tags); i++) {
+      /* Do not draw vacant tags */
+      if(!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
+        continue;
+      w = TEXTW(tags[i]);
+      drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
+      drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+      x += w;
+    }
+  }
 	w = TEXTW(m->ltsymbol);
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
@@ -2116,6 +2142,21 @@ magicgrid(Monitor *m)
 }
 
 void
+overview(Monitor *m)
+{
+  grid(m, overviewgappo, overviewgappi);
+}
+
+void
+toggleoverview(const Arg *arg)
+{
+  uint target = selmon->sel ? selmon->sel->tags : selmon->seltags;
+  selmon->isoverview ^= 1;
+  view(&(Arg){ .ui = target, .i = 1});
+  pointerfocuswin(selmon->sel);
+}
+
+void
 grid(Monitor *m, uint gappo, uint gappi)
 {
   unsigned int i, n;
@@ -2591,8 +2632,13 @@ view(const Arg *arg)
 	int i;
 	unsigned int tmptag;
 
-	if ((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
+  if (selmon->isoverview && arg->i == 0) {
+    selmon->isoverview = 0; // 在overview的情况下，切换tag
+  }
+	if ((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags]) {
+    arrange(selmon);
 		return;
+  }
 	selmon->seltags ^= 1; /* toggle sel tagset */
 	if (arg->ui & TAGMASK) {
 		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
