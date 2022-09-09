@@ -111,6 +111,14 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_o,      showother,      {0} },
 	{ MODKEY,                       XK_s,      hide,           {0} },
 	{ MODKEY|ShiftMask,             XK_s,      show,           {0} },
+	{ MODKEY,                       XK_Up,     movewin,          {.ui = UP} },              /* super ctrl up      |  移动窗口 */
+	{ MODKEY,                       XK_Down,   movewin,          {.ui = DOWN} },            /* super ctrl down    |  移动窗口 */
+	{ MODKEY,                       XK_Left,   movewin,          {.ui = LEFT} },            /* super ctrl left    |  移动窗口 */
+	{ MODKEY,                       XK_Right,  movewin,          {.ui = RIGHT} },           /* super ctrl right   |  移动窗口 */
+	{ MODKEY|ShiftMask,             XK_Up,     resizewin,        {.ui = V_REDUCE} },        /* super ctrl up      |  调整窗口 */
+	{ MODKEY|ShiftMask,             XK_Down,   resizewin,        {.ui = V_EXPAND} },        /* super ctrl down    |  调整窗口 */
+	{ MODKEY|ShiftMask,             XK_Left,   resizewin,        {.ui = H_REDUCE} },        /* super ctrl left    |  调整窗口 */
+	{ MODKEY|ShiftMask,             XK_Right,  resizewin,        {.ui = H_EXPAND} },        /* super ctrl right   |  调整窗口 */
 	TAGKEYS(XK_1,      0,           0)
 	TAGKEYS(XK_2,      1,           0)
 	TAGKEYS(XK_3,      2,           0)

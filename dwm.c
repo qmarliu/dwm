@@ -69,6 +69,8 @@ enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast }; /* clicks */
+enum { UP, DOWN, LEFT, RIGHT }; /* movewin */
+enum { V_EXPAND, V_REDUCE, H_EXPAND, H_REDUCE }; /* resizewins */
 
 typedef struct {
 	int i;
@@ -184,6 +186,7 @@ static void focusstackvis(const Arg *arg);
 static void focusstackhid(const Arg *arg);
 static void focusstack(int inc, int vis);
 static void movestack(const Arg *arg);
+static void pointerfocuswin(Client *c);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
@@ -202,6 +205,8 @@ static void maprequest(XEvent *e);
 static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
+static void movewin(const Arg *arg);
+static void resizewin(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *c);
 static void propertynotify(XEvent *e);
@@ -1050,6 +1055,16 @@ movestack(const Arg *arg) {
 	}
 }
 
+void
+pointerfocuswin(Client *c)
+{
+    if (c) {
+        XWarpPointer(dpy, None, root, 0, 0, 0, 0, c->x + c->w / 2, c->y + c->h / 2);
+        focus(c);
+    } else
+        XWarpPointer(dpy, None, root, 0, 0, 0, 0, selmon->wx + selmon->ww / 3, selmon->wy + selmon->wh / 2);
+}
+
 Atom
 getatomprop(Client *c, Atom prop)
 {
@@ -1435,6 +1450,80 @@ movemouse(const Arg *arg)
 		selmon = m;
 		focus(NULL);
 	}
+}
+
+void
+movewin(const Arg *arg)
+{
+    Client *c;
+    int nx, ny;
+    c = selmon->sel;
+    if (!c)
+        return;
+    if (!c->isfloating)
+        togglefloating(NULL);
+    nx = c->x;
+    ny = c->y;
+    const static int denominator = 10;
+    switch (arg->ui) {
+        case UP:
+            ny -= c->mon->wh / denominator;
+            ny = MAX(ny, c->mon->wy + gappoh);
+            break;
+        case DOWN:
+            ny += c->mon->wh / denominator;
+            ny = MIN(ny, c->mon->wy + c->mon->wh - gappoh - HEIGHT(c));
+            break;
+        case LEFT:
+            nx -= c->mon->ww / denominator;
+            nx = MAX(nx, c->mon->wx + gappov);
+            break;
+        case RIGHT:
+            nx += c->mon->ww / denominator;
+            nx = MIN(nx, c->mon->wx + c->mon->ww - gappov - WIDTH(c));
+            break;
+    }
+    resize(c, nx, ny, c->w, c->h, 1);
+    focus(c);
+    pointerfocuswin(c);
+}
+
+void
+resizewin(const Arg *arg)
+{
+    Client *c;
+    int nh, nw;
+    c = selmon->sel;
+    if (!c)
+        return;
+    if (!c->isfloating)
+        togglefloating(NULL);
+    nw = c->w;
+    nh = c->h;
+    const static int denominator = 20;
+    switch (arg->ui) {
+        case H_EXPAND:
+            nw += selmon->wh / denominator;
+            break;
+        case H_REDUCE:
+            nw -= selmon->wh / denominator;
+            break;
+        case V_EXPAND:
+            nh += selmon->ww / denominator;
+            break;
+        case V_REDUCE:
+            nh -= selmon->ww / denominator;
+            break;
+    }
+    nw = MAX(nw, selmon->ww / denominator);
+    nh = MAX(nh, selmon->wh / denominator);
+    if (c->x + nw + gappoh + 2 * c->bw > selmon->wx + selmon->ww)
+        nw = selmon->wx + selmon->ww - c->x - gappoh - 2 * c->bw;
+    if (c->y + nh + gappov + 2 * c->bw > selmon->wy + selmon->wh)
+        nh = selmon->wy + selmon->wh - c->y - gappov - 2 * c->bw;
+    resize(c, c->x, c->y, nw, nh, 1);
+    focus(c);
+    XWarpPointer(dpy, None, root, 0, 0, 0, 0, c->x + c->w - 2 * c->bw, c->y + c->h - 2 * c->bw);
 }
 
 Client *
