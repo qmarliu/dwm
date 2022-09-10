@@ -88,7 +88,7 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
+	{ MODKEY,                       XK_m,      togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstackvis,  {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstackvis,  {.i = -1 } },
@@ -102,11 +102,15 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_Tab,    toggleoverview, {0} },
+	{ MODKEY,                       XK_n,      viewtoright,    {0} },
+	{ MODKEY|ShiftMask,             XK_n,      viewtoleft,     {0} },
+	{ MODKEY|ControlMask,           XK_n,      tagtoright,     {0} },
+	{ MODKEY|ShiftMask|ControlMask, XK_n,      tagtoleft,      {0} },
+	{ MODKEY,                       XK_grave,  toggleoverview, {0} },
 	{ MODKEY,                       XK_w,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY|ShiftMask,             XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_g,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY,                       XK_a,      setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -156,7 +160,7 @@ static const Key keys[] = {
 	{ MODKEY|ControlMask|ShiftMask, XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh open_last_screenshot") },
 	{ MODKEY,                       XK_v,      spawn,          SHCMD("~/scripts/app-starter.sh set_vol up &") },
 	{ MODKEY|ShiftMask,             XK_v,      spawn,          SHCMD("~/scripts/app-starter.sh set_vol down &") },
-	{ MODKEY,                       XK_n,      spawn,          SHCMD("~/scripts/app-starter.sh change_wallpaper") },
+	{ MODKEY|ShiftMask,             XK_c,      spawn,          SHCMD("~/scripts/app-starter.sh change_wallpaper") },
 };
 
 /* button definitions */
