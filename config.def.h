@@ -153,7 +153,6 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("~/scripts/app-starter.sh killw") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("~/scripts/app-starter.sh filemanager") },
 	{ MODKEY,                       XK_space,  spawn,          SHCMD("~/scripts/app-starter.sh rofi_drun") },
-	{ MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("~/scripts/app-starter.sh keepass") },
 	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("~/scripts/app-starter.sh xlock") },
 	{ MODKEY,                       XK_g,      spawn,          SHCMD("~/scripts/app-starter.sh chrome") },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh flameshot") },
