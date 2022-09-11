@@ -160,7 +160,7 @@ static const Key keys[] = {
 	{ MODKEY|ControlMask|ShiftMask, XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh open_last_screenshot") },
 	{ MODKEY,                       XK_v,      spawn,          SHCMD("~/scripts/app-starter.sh set_vol up &") },
 	{ MODKEY|ShiftMask,             XK_v,      spawn,          SHCMD("~/scripts/app-starter.sh set_vol down &") },
-	{ MODKEY|ShiftMask,             XK_c,      spawn,          SHCMD("~/scripts/app-starter.sh change_wallpaper") },
+	{ MODKEY|ShiftMask,             XK_b,      spawn,          SHCMD("~/scripts/app-starter.sh change_wallpaper") },
 };
 
 /* button definitions */
@@ -172,7 +172,7 @@ static const Button buttons[] = {
 	{ ClkWinTitle,          0,              Button1,        togglewin,      {0} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
-	{ ClkClientWin,         ControlMask,    Button1,        toggleoverview, {0} },
+	{ ClkClientWin,         ShiftMask,      Button1,        toggleoverview, {0} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
