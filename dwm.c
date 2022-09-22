@@ -60,6 +60,12 @@
 
 #define OPAQUE                  0xffU
 
+/* Undefined in X11/X.h buttons that are actualy exist and correspond to
+ * horizontal scroll
+ */
+#define Button6			6
+#define Button7			7
+
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel, SchemeHid, SchemeText, SchemeUnderline }; /* color schemes */

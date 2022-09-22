@@ -59,6 +59,9 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 static const char *overviewtag = "OVERVIEW";
 static const Layout overviewlayout = { "",  overview };
 
+/* mouse scroll resize */
+static const int scrollsensetivity = 30; /* 1 means resize window by 1 pixel for each scroll event */
+
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
@@ -175,6 +178,12 @@ static const Button buttons[] = {
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	// { ClkClientWin,         0,              Button4,        viewtoleft,     {0} },
+	// { ClkClientWin,         0,              Button5,        viewtoright,    {0} },
+	{ ClkRootWin,           0,              Button6,        viewtoleft,     {0} },
+	{ ClkRootWin,           0,              Button7,        viewtoright,    {0} },
+	{ ClkClientWin,         0,              Button6,        viewtoleft,     {0} },
+	{ ClkClientWin,         0,              Button7,        viewtoright,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
