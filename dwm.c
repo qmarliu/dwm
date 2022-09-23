@@ -2695,9 +2695,26 @@ view(const Arg *arg)
 void
 viewtoleft(const Arg *arg) {
 	if(__builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
-	&& selmon->tagset[selmon->seltags] > 1) {
-		selmon->seltags ^= 1; /* toggle sel tagset */
-		selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags ^ 1] >> 1;
+	/*&& selmon->tagset[selmon->seltags] > 1*/) {
+    Client *c;
+    unsigned int occ = 0, i = 0;
+    for (c = selmon->clients; c; c = c->next) {
+      occ |= c->tags;
+    }
+    for (i = 0; i < LENGTH(tags); i++) {
+      if (selmon->tagset[selmon->seltags] <= 1 ) {
+        selmon->tagset[selmon->seltags] = 1 << (LENGTH(tags) - 1);
+      } else {
+        selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags] >> 1;
+      }
+      if (occ & selmon->tagset[selmon->seltags]) {
+        // 找到不为空的tag
+        break;
+      }
+    }
+    // TODO: 维护下seltag <2022/09/23, liul>
+    // selmon->seltags ^= 1; /* toggle sel tagset */
+
 		focus(NULL);
 		arrange(selmon);
 	}
@@ -2706,9 +2723,27 @@ viewtoleft(const Arg *arg) {
 void
 viewtoright(const Arg *arg) {
 	if(__builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
-	&& selmon->tagset[selmon->seltags] & (TAGMASK >> 1)) {
-		selmon->seltags ^= 1; /* toggle sel tagset */
-		selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags ^ 1] << 1;
+	/*&& selmon->tagset[selmon->seltags] & (TAGMASK >> 1)*/) {
+
+    Client *c;
+    unsigned int occ = 0, i = 0;
+    for (c = selmon->clients; c; c = c->next) {
+      occ |= c->tags;
+    }
+    for (i = 0; i < LENGTH(tags); i++) {
+      if (selmon->tagset[selmon->seltags] >= (1 << (LENGTH(tags)-1))) {
+        selmon->tagset[selmon->seltags] = 1;
+      } else {
+        selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags] << 1;
+      }
+      if (occ & selmon->tagset[selmon->seltags]) {
+        // 找到不为空的tag
+        break;
+      }
+    }
+    // TODO: 维护下seltag <2022/09/23, liul>
+    // selmon->seltags ^= 1; /* toggle sel tagset */
+
 		focus(NULL);
 		arrange(selmon);
 	}
