@@ -2701,19 +2701,19 @@ viewtoleft(const Arg *arg) {
     for (c = selmon->clients; c; c = c->next) {
       occ |= c->tags;
     }
+    unsigned int tagset = selmon->tagset[selmon->seltags];
     for (i = 0; i < LENGTH(tags); i++) {
-      if (selmon->tagset[selmon->seltags] <= 1 ) {
-        selmon->tagset[selmon->seltags] = 1 << (LENGTH(tags) - 1);
+      if (tagset <= 1 ) {
+        tagset = 1 << (LENGTH(tags) - 1);
       } else {
-        selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags] >> 1;
+        tagset = tagset >> 1;
       }
-      if (occ & selmon->tagset[selmon->seltags]) {
+      if (occ & tagset) {
         // 找到不为空的tag
-        break;
+        view(&(Arg){ .ui = tagset});
+        return;
       }
     }
-    // TODO: 维护下seltag <2022/09/23, liul>
-    // selmon->seltags ^= 1; /* toggle sel tagset */
 
 		focus(NULL);
 		arrange(selmon);
@@ -2730,19 +2730,19 @@ viewtoright(const Arg *arg) {
     for (c = selmon->clients; c; c = c->next) {
       occ |= c->tags;
     }
+    unsigned int tagset = selmon->tagset[selmon->seltags];
     for (i = 0; i < LENGTH(tags); i++) {
-      if (selmon->tagset[selmon->seltags] >= (1 << (LENGTH(tags)-1))) {
-        selmon->tagset[selmon->seltags] = 1;
+      if (tagset >= (1 << (LENGTH(tags)-1))) {
+        tagset = 1;
       } else {
-        selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags] << 1;
+        tagset = tagset << 1;
       }
-      if (occ & selmon->tagset[selmon->seltags]) {
+      if (occ & tagset) {
         // 找到不为空的tag
-        break;
+        view(&(Arg){ .ui = tagset});
+        return;
       }
     }
-    // TODO: 维护下seltag <2022/09/23, liul>
-    // selmon->seltags ^= 1; /* toggle sel tagset */
 
 		focus(NULL);
 		arrange(selmon);
