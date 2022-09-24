@@ -83,16 +83,12 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "alacritty", NULL };
-static const char *termcmdst[]  = { "st", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY|ControlMask,           XK_n,      spawn,          {.v = termcmdst } },
 	{ MODKEY,                       XK_m,      togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstackvis,  {.i = +1 } },
@@ -153,6 +149,8 @@ static const Key keys[] = {
 	TAGKEYS(XK_z,      15,          "~/scripts/app-starter.sh keepassxc")
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 
+	{ MODKEY,                       XK_Return, spawn,          SHCMD("~/scripts/app-starter.sh alacritty") },
+	{ MODKEY|ControlMask,           XK_n,      spawn,          SHCMD("~/scripts/app-starter.sh st") },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("~/scripts/app-starter.sh killw") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("~/scripts/app-starter.sh filemanager") },
 	{ MODKEY,                       XK_space,  spawn,          SHCMD("~/scripts/app-starter.sh rofi_drun") },
@@ -173,19 +171,19 @@ static const Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button1,        togglewin,      {0} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD("~/scripts/app-starter.sh alacritty") },
 	{ ClkClientWin,         ControlMask,    Button3,        toggleoverview, {0} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
-	{ ClkRootWin,           MODKEY,         Button4,        toggleoverview,     {0} },
-	{ ClkRootWin,           MODKEY,         Button5,        toggleoverview,    {0} },
-	{ ClkClientWin,         MODKEY,         Button4,        toggleoverview,     {0} },
-	{ ClkClientWin,         MODKEY,         Button5,        toggleoverview,    {0} },
-	{ ClkRootWin,           0,              Button6,        viewtoright,     {0} },
-	{ ClkRootWin,           0,              Button7,        viewtoleft,    {0} },
-	{ ClkClientWin,         0,              Button6,        viewtoright,     {0} },
-	{ ClkClientWin,         0,              Button7,        viewtoleft,    {0} },
+	{ ClkRootWin,           MODKEY,         Button4,        toggleoverview, {0} },
+	{ ClkRootWin,           MODKEY,         Button5,        toggleoverview, {0} },
+	{ ClkClientWin,         MODKEY,         Button4,        toggleoverview, {0} },
+	{ ClkClientWin,         MODKEY,         Button5,        toggleoverview, {0} },
+	{ ClkRootWin,           0,              Button6,        viewtoright,    {0} },
+	{ ClkRootWin,           0,              Button7,        viewtoleft,     {0} },
+	{ ClkClientWin,         0,              Button6,        viewtoright,    {0} },
+	{ ClkClientWin,         0,              Button7,        viewtoleft,     {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
