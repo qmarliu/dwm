@@ -182,6 +182,7 @@ static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
 static Monitor *dirtomon(int dir);
+static int drawstatusbar(Monitor *m);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static void enternotify(XEvent *e);
@@ -280,7 +281,7 @@ static void zoom(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
-static char stext[256];
+static char stext[1024];
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh;               /* bar height */
@@ -808,22 +809,134 @@ dirtomon(int dir)
 	return m;
 }
 
+int
+drawstatusbar(Monitor *m) {
+	if (m != selmon) { /* status is only drawn on selected monitor */
+    return 0;
+  }
+  int status_w = 0, i, w, x, len;
+  short isCode = 0;
+  char *text;
+  char *p;
+
+  len = strlen(stext) + 1 ;
+  if (!(text = (char*) malloc(sizeof(char)*len)))
+    die("malloc");
+  p = text;
+  memcpy(text, stext, len);
+
+  // 计算 stext 的长度, 两个^之间的是特殊code。如果不在^^之间，表示是stext字符
+  // 如 ^c#2D1B46^^b#333344^helloworld^d^
+  // code1: ^c#2D1B46^
+  // code2: ^b#333344^
+  // text: helloworld
+  // code3: ^d^
+  w = 0;
+  i = -1;
+  while (text[++i]) {
+    if (text[i] == '^') {
+      if (isCode) {
+        // 跳过code的计数
+        isCode = 0;
+        text = text + i + 1;
+        i = -1;
+      } else {
+        //是新的code代码，计算code之前的正常代码的长度
+        isCode = 1;
+        text[i] = '\0';
+        w += TEXTW(text) - lrpad;
+        text[i] = '^';
+        ++i; // 第一个^后，一定是个特殊字符，可跳过
+      }
+    }
+  }
+  if (isCode)
+    isCode = 0;
+  else
+    w += TEXTW(text) - lrpad;
+  text = p;
+
+  x = m->ww - w;
+
+  drw_setscheme(drw, scheme[LENGTH(colors)]);
+  drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
+  drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
+  drw_rect(drw, x, 0, w, bh, 1, 1);
+  x++;
+
+  const static int boxw=2, underlineless = 5;
+  /* process status text */
+  i = -1;
+  while (text[++i]) {
+    if (text[i] == '^') {
+
+      text[i] = '\0';
+      w = TEXTW(text) - lrpad;
+      drw_text(drw, x, 0, w, bh, 0, text, 0);
+      drw_rect(drw, x+underlineless, bh - boxw, w - 2 * underlineless, boxw, 1, 0);
+      status_w += w;
+
+      x += w;
+
+      /* process code */
+      while (text[++i] != '^') {
+        if (text[i] == 'c') {
+          char buf[8];
+          memcpy(buf, (char*)text+i+1, 7);
+          buf[7] = '\0';
+          drw_clr_create(drw, &drw->scheme[ColFg], buf, 0xff);
+          i += 7;
+        } else if (text[i] == 'b') {
+          char buf[8];
+          memcpy(buf, (char*)text+i+1, 7);
+          buf[7] = '\0';
+          drw_clr_create(drw, &drw->scheme[ColBg], buf, 0xdd);
+          i += 7;
+        } else if (text[i] == 'd') {
+          drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
+          drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
+        } else {
+          // TODO: todo <2022/09/25, liul>
+          w = TEXTW(text) - lrpad;
+          drw_text(drw, x, 0, w, bh, 0, text, 0);
+          status_w += w;
+          free(p);
+          drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
+          drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
+          drw_setscheme(drw, scheme[SchemeNorm]);
+          return status_w - 2;
+        }
+      }
+
+      text = text + i + 1;
+      i=-1;
+    }
+  }
+
+  if (!isCode) {
+      w = TEXTW(text) - lrpad;
+      drw_text(drw, x, 0, w, bh, 0, text, 0);
+      drw_rect(drw, x+underlineless, bh - boxw, w - 2 * underlineless, boxw, 1, 0);
+      status_w += w;
+  }
+
+  drw_setscheme(drw, scheme[SchemeNorm]);
+  free(p);
+
+  return status_w - 2;
+}
+
 void
 drawbar(Monitor *m)
 {
-	int x, w, tw = 0, n = 0, scm;
-	unsigned int i, occ = 0, urg = 0;
-	Client *c;
+  int x, w, tw = 0, n = 0, scm;
+  unsigned int i, occ = 0, urg = 0;
+  Client *c;
 
-	if (!m->showbar)
-		return;
+  if (!m->showbar)
+    return;
 
-	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
-		drw_setscheme(drw, scheme[SchemeText]);
-		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
-		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
-	}
+  tw = drawstatusbar(m);
 
 	for (c = m->clients; c; c = c->next) {
 		if (ISVISIBLE(c))
@@ -835,8 +948,8 @@ drawbar(Monitor *m)
 	x = 0;
 
   // 代表为overview tag状态
+  const static int boxw = 2;
   if (m->isoverview) {
-    int boxw = 2;
     w = TEXTW(overviewtag);
     drw_setscheme(drw, scheme[SchemeSel]);
     drw_text(drw, x, 0, w, bh, lrpad / 2, overviewtag, 0);
@@ -851,6 +964,10 @@ drawbar(Monitor *m)
       w = TEXTW(tags[i]);
       drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
       drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+      if (m->tagset[m->seltags] & 1 << i) {
+        drw_setscheme(drw, scheme[SchemeUnderline]);
+        drw_rect(drw, x, bh - boxw, w + lrpad, boxw, 1, 0);
+      }
       x += w;
     }
   }
@@ -880,6 +997,10 @@ drawbar(Monitor *m)
 					remainder--;
 				}
 				drw_text(drw, x, 0, tabw, bh, lrpad / 2, c->name, 0);
+        if (scm == SchemeSel) {
+          drw_setscheme(drw, scheme[SchemeUnderline]);
+          drw_rect(drw, x, bh - boxw, tabw, boxw, 1, 0);
+        }
 				x += tabw;
 			}
 		} else {
@@ -1971,7 +2092,8 @@ setup(void)
 	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
 	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
 	/* init appearance */
-	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
+  scheme = ecalloc(LENGTH(colors) + 1, sizeof(Clr *));
+	scheme[LENGTH(colors)] = drw_scm_create(drw, colors[0], alphas[0], 3);
 	for (i = 0; i < LENGTH(colors); i++)
 		scheme[i] = drw_scm_create(drw, colors[i], alphas[i], 3);
 	/* init bars */

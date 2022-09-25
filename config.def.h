@@ -14,17 +14,17 @@ static const int overviewgappi      = 24;        /* overview时 窗口与边缘 
 static const int overviewgappo      = 60;        /* overview时 窗口与窗口 缝隙大小 */
 static const char *fonts[]          = { "WenQuanYi Zen Hei Mono:size=10" };
 static const char dmenufont[]       = "WenQuanYi Zen Hei Mono:size=10";
-static const char col_gray1[]       = "#333333";
+static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
+static const char col_gray4[]       = "#ffffff";
 static const char col_cyan[]        = "#005577";
 static const unsigned int baralpha = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, "#665544",  "#bb7700"  },
+	[SchemeSel]  = { col_gray4, "#775544",  "#bb7700"  },
 	[SchemeHid]  = { col_cyan,  col_gray1, col_gray2  },
 	[SchemeText] = { col_gray3, col_gray1, col_gray2  },
 	[SchemeUnderline] = { "#7799AA", "#7799AA", "#7799AA" },
