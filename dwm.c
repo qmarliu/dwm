@@ -242,6 +242,7 @@ static void showwin(Client *c);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
+static void tagtab(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
@@ -251,7 +252,9 @@ static void grid(Monitor *m, uint gappo, uint gappi);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglescratch(const Arg *arg);
+static void toggletagtab(const Arg *arg);
 static void toggletag(const Arg *arg);
+static void toggleviewtab(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void toggleoverview(const Arg *arg);
 static void togglewin(const Arg *arg);
@@ -896,7 +899,7 @@ drawstatusbar(Monitor *m) {
           drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
           drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
         } else {
-          // TODO: todo <2022/09/25, liul>
+          // 异常情况，直接返回
           w = TEXTW(text) - lrpad;
           drw_text(drw, x, 0, w, bh, 0, text, 0);
           status_w += w;
@@ -2216,6 +2219,12 @@ spawn(const Arg *arg)
 }
 
 void
+tagtab(const Arg *arg)
+{
+  tag(&(Arg){ .ui = selmon->tagset[selmon->seltags^1]});
+}
+
+void
 tag(const Arg *arg)
 {
 	if (selmon->sel && arg->ui & TAGMASK) {
@@ -2406,6 +2415,12 @@ togglescratch(const Arg *arg)
 }
 
 void
+toggletagtab(const Arg *arg)
+{
+  toggletag(&(Arg){ .ui = selmon->tagset[selmon->seltags^1]});
+}
+
+void
 toggletag(const Arg *arg)
 {
 	unsigned int newtags;
@@ -2418,6 +2433,12 @@ toggletag(const Arg *arg)
 		focus(NULL);
 		arrange(selmon);
 	}
+}
+
+void
+toggleviewtab(const Arg *arg)
+{
+  toggleview(&(Arg){ .ui = selmon->tagset[selmon->seltags^1]});
 }
 
 void

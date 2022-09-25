@@ -24,7 +24,7 @@ static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, "#775544",  "#bb7700"  },
+	[SchemeSel]  = { col_gray4, "#775544",  "#DDA0DD"  },
 	[SchemeHid]  = { col_cyan,  col_gray1, col_gray2  },
 	[SchemeText] = { col_gray3, col_gray1, col_gray2  },
 	[SchemeUnderline] = { "#7799AA", "#7799AA", "#7799AA" },
@@ -103,6 +103,9 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
+  { MODKEY|ControlMask,           XK_Tab,    toggleviewtab,  {0} },
+  { MODKEY|ShiftMask,             XK_Tab,    tagtab,         {0} },
+  { MODKEY|ControlMask|ShiftMask, XK_Tab,    toggletagtab,   {0} },
 	{ MODKEY,                       XK_n,      viewtoright,    {0} },
 	{ MODKEY|ShiftMask,             XK_n,      viewtoleft,     {0} },
 	{ MODKEY,                       XK_grave,  toggleoverview, {0} },
