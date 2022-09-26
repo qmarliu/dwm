@@ -161,7 +161,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_space,  spawn,          SHCMD("~/scripts/app-starter.sh rofi_combi") },
 	{ MODKEY|ShiftMask,             XK_space,  spawn,          SHCMD("~/scripts/app-starter.sh rofi_run") },
 	{ MODKEY|ControlMask,           XK_space,  spawn,          SHCMD("~/scripts/app-starter.sh rofi_menu") },
-	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("~/scripts/app-starter.sh xlock") },
+	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("~/scripts/app-starter.sh lock") },
 	{ MODKEY,                       XK_g,      spawn,          SHCMD("~/scripts/app-starter.sh chrome") },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh flameshot") },
 	{ MODKEY|ControlMask|ShiftMask, XK_a,      spawn,          SHCMD("~/scripts/app-starter.sh open_last_screenshot") },
